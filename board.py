@@ -20,18 +20,9 @@ class Board:
     def __init__(self):
         self.board = [[Board.BLANK] * 10 for i in range(10)]
         for i in range(10):
-            self.board[0][i] = self.board[9][i] = self.board[i][0] = self.board[9][i] = Board.BORDER
+            self.board[0][i] = self.board[9][i] = self.board[i][0] = self.board[i][9] = Board.BORDER
         self.board[4][4] = self.board[5][5] = Stone.BLACK
         self.board[4][5] = self.board[5][4] = Stone.WHITE
-
-    def _get_at(self, _pos):
-        return self.board[_pos[X]][_pos[Y]]
-
-    def _set_stone_at(self, _turn, _pos):
-        self.board[_pos[X]][_pos[Y]] = _turn
-
-    def _step(self, _pos, _dir):
-        return (_pos[X] + _dir[X], _pos[Y] + _dir[Y])
 
     def possible_to_put_stone(self, _turn):
         _possible = False
@@ -57,6 +48,30 @@ class Board:
             _reverse_num += self._count_reversible_stones_in_direction(_turn, _pos, _dir)
         return _reverse_num
 
+    def reverse_stones_from(self, _pos):
+        _turn = self.board[_pos[X]][_pos[Y]]
+        if _turn in (Stone.BLACK, Stone.WHITE):
+            for _dir in directions:
+                _last_pos = self._find_last_pos_in_direction(_turn, _pos, _dir)
+                if _last_pos is not None:
+                    self._reverse_stones_in_direction(_turn, _last_pos, (-_dir[X], -_dir[Y]))
+
+    def put_stone_at(self, _turn, _pos):
+        _success = False
+        if self._get_at(_pos) == Board.BLANK:
+            self._set_stone_at(_turn, _pos)
+            _success = True
+        return _success
+
+    def _get_at(self, _pos):
+        return self.board[_pos[X]][_pos[Y]]
+
+    def _set_stone_at(self, _turn, _pos):
+        self.board[_pos[X]][_pos[Y]] = _turn
+
+    def _step(self, _pos, _dir):
+        return (_pos[X] + _dir[X], _pos[Y] + _dir[Y])
+
     def _count_reversible_stones_in_direction(self, _turn, _pos, _dir):
         _opponent_turn = Stone.reverse(_turn)
         _reverse_num = 0
@@ -67,14 +82,6 @@ class Board:
         if self._get_at(_cur_pos) != _turn:
             _reverse_num = 0
         return _reverse_num
-
-    def reverse_stones_from(self, _pos):
-        _turn = self.board[_pos[X]][_pos[Y]]
-        if _turn in (Stone.BLACK, Stone.WHITE):
-            for _dir in directions:
-                _last_pos = self._find_last_pos_in_direction(_turn, _pos, _dir)
-                if _last_pos is not None:
-                    self._reverse_stones_in_direction(_turn, _last_pos, (-_dir[X], -_dir[Y]))
 
     def _find_last_pos_in_direction(self, _turn, _pos, _dir):
         _opponent_turn = Stone.reverse(_turn)
@@ -91,13 +98,6 @@ class Board:
         while self._get_at(_cur_pos) == _opponent_turn:
             self._set_stone_at(_turn, _cur_pos)
             _cur_pos = self._step(_cur_pos, _dir)
-
-    def put_stone_at(self, _turn, _pos):
-        _success = False
-        if self._get_at(_pos) == Board.BLANK:
-            self._set_stone_at(_turn, _pos)
-            _success = True
-        return _success
 
     def __str__(self):
         _cols = [" ", "A", "B", "C", "D", "E", "F", "G", "H"]
