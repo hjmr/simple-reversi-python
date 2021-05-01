@@ -45,10 +45,16 @@ class Board:
                 _count += 1
         return _count
 
+    def count_blank(self):
+        _count = 0
+        for _s in self.board:
+            if _s == Board.BLANK:
+                _count += 1
+        return _count
+
     def copy(self):
         b = Board()
-        for idx, v in enumerate(self.board):
-            b.board[idx] = v
+        b.board = self.board.copy()
         return b
 
     def __str__(self):
