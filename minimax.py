@@ -9,7 +9,7 @@ class Minimax:
         self.max_level = 1
         self.eval_count = 0
 
-    def find_next_move(self, _board, _max_level):
+    def search_next_move(self, _board, _max_level):
         self.eval_count = 0
         self.max_level = _max_level
         _pos, _eval = self._minimax(_board, self.my_stone, 0)
@@ -33,7 +33,10 @@ class Minimax:
             else:
                 _eval_pos = min(_eval_list.items(), key=lambda x: x[1])
         else:
-            _eval_pos = (None, self._eval(_board))
+            if self.max_level <= _level:
+                _eval_pos = (None, self._eval(_board))
+            else:
+                _eval_pos = (None, self._minimax(_board, Stone.reverse(_stone), _level)[1])
         return _eval_pos
 
     def _eval(self, _board):

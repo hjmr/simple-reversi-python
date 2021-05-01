@@ -15,14 +15,13 @@ class Stone:
 class Board:
     BORDER = 100
     BLANK = 101
+    SIZE = 8
 
     def __init__(self):
-        self.board = [Board.BLANK] * 10 * 10
-        for i in range(10):
-            self.set_stone_at(Board.BORDER, (0, i))
-            self.set_stone_at(Board.BORDER, (9, i))
-            self.set_stone_at(Board.BORDER, (i, 0))
-            self.set_stone_at(Board.BORDER, (i, 9))
+        self.board = [Board.BORDER] * (Board.SIZE + 2) * (Board.SIZE + 2)
+        for x in range(1, Board.SIZE+1):
+            for y in range(1, Board.SIZE+1):
+                self.set_stone_at(Board.BLANK, (x, y))
         self.set_stone_at(Stone.BLACK, (4, 4))
         self.set_stone_at(Stone.BLACK, (5, 5))
         self.set_stone_at(Stone.WHITE, (4, 5))
@@ -30,13 +29,13 @@ class Board:
 
     def get_at(self, _pos):
         _ret = Board.BORDER
-        if 1 <= _pos[X] and _pos[X] <= 8 and 1 <= _pos[Y] and _pos[Y] <= 8:
-            _ret = self.board[_pos[Y] * 10 + _pos[X]]
+        if 1 <= _pos[X] and _pos[X] <= Board.SIZE and 1 <= _pos[Y] and _pos[Y] <= Board.SIZE:
+            _ret = self.board[_pos[Y] * (Board.SIZE + 2) + _pos[X]]
         return _ret
 
     def set_stone_at(self, _stone, _pos):
-        if 1 <= _pos[X] and _pos[X] <= 8 and 1 <= _pos[Y] and _pos[Y] <= 8:
-            self.board[_pos[Y] * 10 + _pos[X]] = _stone
+        if 1 <= _pos[X] and _pos[X] <= Board.SIZE and 1 <= _pos[Y] and _pos[Y] <= Board.SIZE:
+            self.board[_pos[Y] * (Board.SIZE + 2) + _pos[X]] = _stone
 
     def count_stones(self, _stone):
         _count = 0
@@ -61,9 +60,9 @@ class Board:
         _cols = [" ", "A", "B", "C", "D", "E", "F", "G", "H"]
         _conv = {Board.BORDER: "#", Board.BLANK: ".", Stone.BLACK: "X", Stone.WHITE: "O"}
         _sep = " "
-        _s = [[_conv[self.get_at((x, y))] for x in range(1, 9)] for y in range(1, 9)]
+        _s = [[_conv[self.get_at((x, y))] for x in range(1, Board.SIZE + 1)] for y in range(1, Board.SIZE + 1)]
 
-        _str = _sep.join(_cols) + "\n"
+        _str = _sep.join(_cols[:Board.SIZE+1]) + "\n"
         for _ln, _l in enumerate(_s):
             _str += str(_ln+1) + _sep + _sep.join(_l) + "\n"
         return _str
