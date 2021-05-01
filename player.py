@@ -2,7 +2,7 @@ import time
 
 from board import Board
 from evaluator import PutPosEvaluator, StoneNumEvaluator
-from minimax import Minimax
+from minimax_thread import Minimax_Thread
 
 
 class Player:
@@ -30,11 +30,11 @@ class ComputerPlayer(Player):
         super().__init__()
         self.max_search_level = _max_search_level
         self.my_stone = _my_stone
-        self.selector = Minimax(PutPosEvaluator(), _my_stone)
+        self.selector = Minimax_Thread(PutPosEvaluator(), self.my_stone)
 
     def next_move(self, _board):
         if _board.count_blank() < 15:
-            self.selector = Minimax(StoneNumEvaluator(), self.my_stone)
+            self.selector = Minimax_Thread(StoneNumEvaluator(), self.my_stone)
             self.max_search_level = _board.count_blank()
 
         _start_time = time.time()
