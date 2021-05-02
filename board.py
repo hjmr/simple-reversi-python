@@ -27,20 +27,20 @@ class Board:
         self.set_stone_at(Stone.WHITE, (4, 5))
         self.set_stone_at(Stone.WHITE, (5, 4))
 
-    def get_at(self, _pos):
+    def get_at(self, pos):
         _ret = Board.BORDER
-        if 1 <= _pos[X] and _pos[X] <= Board.SIZE and 1 <= _pos[Y] and _pos[Y] <= Board.SIZE:
-            _ret = self.board[_pos[Y] * (Board.SIZE + 2) + _pos[X]]
+        if 1 <= pos[X] and pos[X] <= Board.SIZE and 1 <= pos[Y] and pos[Y] <= Board.SIZE:
+            _ret = self.board[pos[Y] * (Board.SIZE + 2) + pos[X]]
         return _ret
 
-    def set_stone_at(self, _stone, _pos):
-        if 1 <= _pos[X] and _pos[X] <= Board.SIZE and 1 <= _pos[Y] and _pos[Y] <= Board.SIZE:
-            self.board[_pos[Y] * (Board.SIZE + 2) + _pos[X]] = _stone
+    def set_stone_at(self, stone, pos):
+        if 1 <= pos[X] and pos[X] <= Board.SIZE and 1 <= pos[Y] and pos[Y] <= Board.SIZE:
+            self.board[pos[Y] * (Board.SIZE + 2) + pos[X]] = stone
 
-    def count_stones(self, _stone):
+    def count_stones(self, stone):
         _count = 0
         for _s in self.board:
-            if _s == _stone:
+            if _s == stone:
                 _count += 1
         return _count
 
