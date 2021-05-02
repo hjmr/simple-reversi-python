@@ -40,7 +40,7 @@ class ComputerPlayer(Player):
             self.selector = Minimax(PutPosEvaluator(), self.my_stone)
 
     def next_move(self, board):
-        if board.count_blank() < 10:
+        if board.count_blank() < 12:
             if 1 < self.num_thread:
                 self.selector = Minimax_Threaded(StoneNumEvaluator(), self.my_stone, num_thread=self.num_thread)
             else:
@@ -55,7 +55,7 @@ class ComputerPlayer(Player):
             self._pos2str(_pos), _eval, self.curr_search_level, _eval_num, _elapsed_time))
         if _elapsed_time < 15:
             self.curr_search_level += 1
-        elif 60 < _elapsed_time:
+        elif 45 < _elapsed_time:
             self.curr_search_level = max(self.max_search_level, self.curr_search_level - 1)
         return _pos
 
