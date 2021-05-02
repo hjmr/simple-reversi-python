@@ -18,6 +18,11 @@ class Board:
     SIZE = 8
 
     def __init__(self):
+        self.pos_table = [[0] * (Board.SIZE + 2) for _ in range(Board.SIZE + 2)]
+        for x in range(Board.SIZE + 2):
+            for y in range(Board.SIZE + 2):
+                self.pos_table[x][y] = y * (Board.SIZE + 2) + x
+
         self.board = [Board.BORDER] * (Board.SIZE + 2) * (Board.SIZE + 2)
         for x in range(1, Board.SIZE+1):
             for y in range(1, Board.SIZE+1):
@@ -30,12 +35,12 @@ class Board:
     def get_at(self, pos):
         _ret = Board.BORDER
         if 1 <= pos[X] and pos[X] <= Board.SIZE and 1 <= pos[Y] and pos[Y] <= Board.SIZE:
-            _ret = self.board[pos[Y] * (Board.SIZE + 2) + pos[X]]
+            _ret = self.board[self.pos_table[pos[X]][pos[Y]]]
         return _ret
 
     def set_stone_at(self, stone, pos):
         if 1 <= pos[X] and pos[X] <= Board.SIZE and 1 <= pos[Y] and pos[Y] <= Board.SIZE:
-            self.board[pos[Y] * (Board.SIZE + 2) + pos[X]] = stone
+            self.board[self.pos_table[pos[X]][pos[Y]]] = stone
 
     def count_stones(self, stone):
         _count = 0

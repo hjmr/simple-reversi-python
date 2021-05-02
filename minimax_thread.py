@@ -1,4 +1,5 @@
-from concurrent.futures import ThreadPoolExecutor
+import random
+from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
 from board import Board, Stone
 from game import Game
@@ -21,35 +22,41 @@ def get_positions_to_put_stone(board, stone):
 
 
 def run_minimax_thread(args):
-    _ret = args[0].do_search(args[1], args[2], args[3], args[4])
-    return _ret
+    _pos, _eval = args[0].do_search(args[1], args[2], args[3], args[4])
+    return (_pos, _eval, args[0].eval_count)
 
 
 class Minimax_Threaded:
-    def __init__(self, evaluator, my_stone, num_thread=4):
+    def __init__(self, evaluator, my_stone, num_thread=4, use_process=False):
         self.evaluator = evaluator
         self.my_stone = my_stone
         self.num_thread = num_thread
-        self.minimax_sub = None
+        self.use_process = use_process
 
     def search_next_move(self, board, max_level):
-        self.minimax_sub = Minimax_Sub(self, self.evaluator, self.my_stone, max_level)
-        _pos, _eval = self._minimax(board, self.my_stone, 0)
-        return (_pos, _eval, self.minimax_sub.eval_count)
+        _pos, _eval, _eval_count = self._minimax(board, self.my_stone, 0, max_level)
+        return (_pos, _eval, _eval_count)
 
-    def _minimax(self, board, stone, level):
+    def _minimax(self, board, stone, level, max_level):
         level += 1
         _pos_list = split_list(get_positions_to_put_stone(board, stone), self.num_thread)
-        _args = [[self.minimax_sub, board, stone, level, _pl, _n] for _n, _pl in enumerate(_pos_list)]
-        with ThreadPoolExecutor(max_workers=self.num_thread) as executor:
-            _eval_list = executor.map(run_minimax_thread, _args)
-        _eval_pos = max(_eval_list, key=lambda x: x[1])
-        return _eval_pos
+        _args = [[Minimax_Sub(self.evaluator, self.my_stone, max_level), board, stone, level, _pl] for _pl in _pos_list]
+        if self.use_process:
+            with ProcessPoolExecutor(max_workers=self.num_thread) as executor:
+                _eval_list = executor.map(run_minimax_thread, _args)
+        else:
+            with ThreadPoolExecutor(max_workers=self.num_thread) as executor:
+                _eval_list = executor.map(run_minimax_thread, _args)
+
+        _eval_list = [v for v in _eval_list]
+        _eval_count = sum(v[2] for v in _eval_list)
+        _max_list = [(v[0], v[1]) for v in _eval_list if v[1] == max(_eval_list, key=lambda x: x[1])[1]]
+        _max_p, _max_v = random.choice(_max_list)
+        return _max_p, _max_v, _eval_count
 
 
 class Minimax_Sub:
-    def __init__(self, parent, evaluator, my_stone, max_level):
-        self.parent = parent
+    def __init__(self, evaluator, my_stone, max_level):
         self.evaluator = evaluator
         self.my_stone = my_stone
         self.max_level = max_level
