@@ -13,6 +13,7 @@ def parse_args():
                         help="Computer is the first player (white stone).")
     parser.add_argument("-p", "--use_process", action="store_true",
                         help="Specify when to use ProcessPoolExecutor instead of ThreadPoolExecutor.")
+    parser.add_argument("-l", "--level", type=int, default=5, help="Specify the level of computer player.")
     return parser.parse_args()
 
 
@@ -51,9 +52,9 @@ if __name__ == "__main__":
     args = parse_args()
     players = {}
     if args.computer_first:
-        players = {Stone.BLACK: ComputerPlayer(Stone.BLACK, num_thread=args.thread_num, use_process=args.use_process),
+        players = {Stone.BLACK: ComputerPlayer(Stone.BLACK, args.level, args.thread_num, args.use_process),
                    Stone.WHITE: HumanPlayer(Stone.WHITE)}
     else:
         players = {Stone.BLACK: HumanPlayer(Stone.BLACK),
-                   Stone.WHITE: ComputerPlayer(Stone.WHITE, num_thread=args.thread_num, use_process=args.use_process)}
+                   Stone.WHITE: ComputerPlayer(Stone.WHITE, args.level, args.thread_num, args.use_process)}
     run(players)
