@@ -28,7 +28,7 @@ class MiddleEvaluator(Evaluator):
         _opp_stone = Stone.reverse(my_stone)
         _point = 0
         _corners = ((1, 1), (1, 8), (8, 1), (8, 8))
-        _corner_point = 5
+        _corner_point = 10
         for _c in _corners:
             _s = board.get_at(_c)
             if _s == my_stone:
