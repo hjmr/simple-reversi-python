@@ -27,17 +27,17 @@ class Board:
             _ret = self.board[self.pos_table[pos[0]][pos[1]]]
         return _ret
 
-    def set_stone_at(self, stone, pos):
+    def set_stone_at(self, a_stone, pos):
         if 1 <= pos[0] and pos[0] <= SIZE and 1 <= pos[1] and pos[1] <= SIZE:
-            self.board[self.pos_table[pos[0]][pos[1]]] = stone
+            self.board[self.pos_table[pos[0]][pos[1]]] = a_stone
 
     def is_blank_at(self, pos):
         return bool(self.get_at(pos) == BLANK)
 
-    def count_stones(self, stone):
+    def count_stones(self, a_stone):
         _count = 0
         for _s in self.board:
-            if _s == stone:
+            if _s == a_stone:
                 _count += 1
         return _count
 

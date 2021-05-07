@@ -1,8 +1,6 @@
 import stone
 from board import Board
 
-X = 0
-Y = 1
 directions = ((-1, -1), (0, -1), (1, -1), (-1, 0), (1, 0), (-1, 1), (0, 1), (1, 1))
 
 
@@ -39,7 +37,7 @@ def reverse_stones_from(a_board, pos):
         for _dir in directions:
             _last_pos = _find_last_pos_in_direction(a_board, _stone, pos, _dir)
             if _last_pos is not None:
-                _reverse_stones_in_direction(a_board, _stone, _last_pos, (-_dir[X], -_dir[Y]))
+                _reverse_stones_in_direction(a_board, _stone, _last_pos, (-_dir[0], -_dir[1]))
 
 
 def put_stone_at(a_board, a_stone, pos):
@@ -51,7 +49,7 @@ def put_stone_at(a_board, a_stone, pos):
 
 
 def _move(pos, dire):
-    return (pos[X] + dire[X], pos[Y] + dire[Y])
+    return (pos[0] + dire[0], pos[1] + dire[1])
 
 
 def _count_reversible_stones_in_direction(a_board, a_stone, pos, dire):
