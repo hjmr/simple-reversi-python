@@ -1,7 +1,8 @@
 import argparse
 
-from board import Stone, Board
-from game import Game
+import stone
+import game
+from board import Board
 
 from player import HumanPlayer, ComputerPlayer
 
@@ -18,8 +19,8 @@ def parse_args():
 
 
 def run(players):
-    _str_stone = {Stone.BLACK: "Black", Stone.WHITE: "White"}
-    _curr_turn = Stone.BLACK
+    _str_stone = {stone.BLACK: "Black", stone.WHITE: "White"}
+    _curr_turn = stone.BLACK
 
     _board = Board()
 
@@ -29,7 +30,7 @@ def run(players):
         print(_board)
         print("Turn: {} ({})".format(_str_stone[_curr_turn], players[_curr_turn]))
 
-        if not Game.possible_to_put_stone(_board, _curr_turn):
+        if not game.possible_to_put_stone(_board, _curr_turn):
             _pass_num += 1
             print("Pass.")
         else:
@@ -37,14 +38,14 @@ def run(players):
             _done = False
             while not _done:
                 _pos = players[_curr_turn].next_move(_board)
-                if Game.possible_to_put_stone_at(_board, _curr_turn, _pos):
-                    Game.put_stone_at(_board, _curr_turn, _pos)
-                    Game.reverse_stones_from(_board, _pos)
+                if game.possible_to_put_stone_at(_board, _curr_turn, _pos):
+                    game.put_stone_at(_board, _curr_turn, _pos)
+                    game.reverse_stones_from(_board, _pos)
                     _done = True
-        _curr_turn = Stone.reverse(_curr_turn)
+        _curr_turn = stone.reverse(_curr_turn)
 
-    black_num = _board.count_stones(Stone.BLACK)
-    white_num = _board.count_stones(Stone.WHITE)
+    black_num = _board.count_stones(stone.BLACK)
+    white_num = _board.count_stones(stone.WHITE)
     print("Black:{} White:{}".format(black_num, white_num))
 
 
@@ -52,9 +53,9 @@ if __name__ == "__main__":
     args = parse_args()
     players = {}
     if args.computer_first:
-        players = {Stone.BLACK: ComputerPlayer(Stone.BLACK, args.level, args.thread_num, args.use_process),
-                   Stone.WHITE: HumanPlayer(Stone.WHITE)}
+        players = {stone.BLACK: ComputerPlayer(stone.BLACK, args.level, args.thread_num, args.use_process),
+                   stone.WHITE: HumanPlayer(stone.WHITE)}
     else:
-        players = {Stone.BLACK: HumanPlayer(Stone.BLACK),
-                   Stone.WHITE: ComputerPlayer(Stone.WHITE, args.level, args.thread_num, args.use_process)}
+        players = {stone.BLACK: HumanPlayer(stone.BLACK),
+                   stone.WHITE: ComputerPlayer(stone.WHITE, args.level, args.thread_num, args.use_process)}
     run(players)
