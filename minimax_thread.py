@@ -101,7 +101,7 @@ class Minimax_Sub:
             if self.max_level <= level:
                 _eval_pos = (None, self._eval(a_board))
             else:
-                _eval_pos = (None, self._minimax(a_board, stone.reverse(a_stone), level)[1])
+                _eval_pos = (None, self._minimax(a_board, stone.reverse(a_stone), level, alpha, beta)[1])
         return _eval_pos
 
     def _eval(self, _board):
