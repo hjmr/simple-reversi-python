@@ -1,8 +1,7 @@
 import argparse
 
 import stone
-from board import Board
-
+from game import ConsoleGame
 from player import HumanPlayer, ComputerPlayer
 
 
@@ -17,44 +16,13 @@ def parse_args():
     return parser.parse_args()
 
 
-def run(players):
-    _str_stone = {stone.BLACK: "Black", stone.WHITE: "White"}
-    _curr_turn = stone.BLACK
-
-    _board = Board()
-
-    _pass_num = 0
-    while _pass_num < 2:
-        print("---------------------------------------")
-        print(_board)
-        print("Turn: {} ({})".format(_str_stone[_curr_turn], players[_curr_turn]))
-
-        if not _board.possible_to_put_stone(_curr_turn):
-            _pass_num += 1
-            print("Pass.")
-        else:
-            _pass_num = 0
-            _done = False
-            while not _done:
-                _pos = players[_curr_turn].next_move(_board)
-                if _board.possible_to_put_stone_at(_curr_turn, _pos):
-                    _board.put_stone_at(_curr_turn, _pos)
-                    _board.reverse_stones_from(_pos)
-                    _done = True
-        _curr_turn = stone.reverse(_curr_turn)
-
-    black_num = _board.count_stones(stone.BLACK)
-    white_num = _board.count_stones(stone.WHITE)
-    print("Black:{} White:{}".format(black_num, white_num))
+def run(args):
+    com_stone, man_stone = (stone.BLACK, stone.WHITE) if args.computer_first else (stone.WHITE, stone.BLACK)
+    players = {com_stone: ComputerPlayer(com_stone, args.level, args.thread_num, args.use_process),
+               man_stone: HumanPlayer(man_stone)}
+    game = ConsoleGame(players)
+    game.play()
 
 
 if __name__ == "__main__":
-    args = parse_args()
-    players = {}
-    if args.computer_first:
-        players = {stone.BLACK: ComputerPlayer(stone.BLACK, args.level, args.thread_num, args.use_process),
-                   stone.WHITE: HumanPlayer(stone.WHITE)}
-    else:
-        players = {stone.BLACK: HumanPlayer(stone.BLACK),
-                   stone.WHITE: ComputerPlayer(stone.WHITE, args.level, args.thread_num, args.use_process)}
-    run(players)
+    run(parse_args())
