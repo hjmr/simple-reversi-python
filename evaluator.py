@@ -1,5 +1,4 @@
 import stone
-import game
 
 
 class Evaluator:
@@ -20,7 +19,7 @@ class MiddleEvaluator(Evaluator):
         _count = 0
         for x in range(1, 9):
             for y in range(1, 9):
-                if game.possible_to_put_stone_at(a_board, my_stone, (x, y)):
+                if a_board.possible_to_put_stone_at(my_stone, (x, y)):
                     _count += 1
         return _count
 

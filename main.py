@@ -1,7 +1,6 @@
 import argparse
 
 import stone
-import game
 from board import Board
 
 from player import HumanPlayer, ComputerPlayer
@@ -30,7 +29,7 @@ def run(players):
         print(_board)
         print("Turn: {} ({})".format(_str_stone[_curr_turn], players[_curr_turn]))
 
-        if not game.possible_to_put_stone(_board, _curr_turn):
+        if not _board.possible_to_put_stone(_curr_turn):
             _pass_num += 1
             print("Pass.")
         else:
@@ -38,9 +37,9 @@ def run(players):
             _done = False
             while not _done:
                 _pos = players[_curr_turn].next_move(_board)
-                if game.possible_to_put_stone_at(_board, _curr_turn, _pos):
-                    game.put_stone_at(_board, _curr_turn, _pos)
-                    game.reverse_stones_from(_board, _pos)
+                if _board.possible_to_put_stone_at(_curr_turn, _pos):
+                    _board.put_stone_at(_curr_turn, _pos)
+                    _board.reverse_stones_from(_pos)
                     _done = True
         _curr_turn = stone.reverse(_curr_turn)
 

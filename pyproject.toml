@@ -7,6 +7,7 @@ authors = ["hjmr <2620990+hjmr@users.noreply.github.com>"]
 [tool.poetry.dependencies]
 python = "~3.9"
 Cython = "^0.29.23"
+pygame = "^2.0.1"
 
 [tool.poetry.dev-dependencies]
 

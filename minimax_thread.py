@@ -2,7 +2,6 @@ import random
 from concurrent.futures import ThreadPoolExecutor, ProcessPoolExecutor
 
 import stone
-import game
 from board import Board
 
 SMALL_NUMBER = -1000
@@ -20,7 +19,7 @@ def get_positions_to_put_stone(a_board, a_stone):
     _positions = []
     for x in range(1, 9):
         for y in range(1, 9):
-            if game.possible_to_put_stone_at(a_board, a_stone, (x, y)):
+            if a_board.possible_to_put_stone_at(a_stone, (x, y)):
                 _positions.append((x, y))
     return _positions
 
@@ -79,8 +78,8 @@ class Minimax_Sub:
             _beta = LARGE_NUMBER
             for _p in pos_list:
                 b = a_board.copy()
-                game.put_stone_at(b, a_stone, _p)
-                game.reverse_stones_from(b, _p)
+                b.put_stone_at(a_stone, _p)
+                b.reverse_stones_from(_p)
                 if self.max_level <= level:
                     _eval_list[_p] = self._eval(b)
                 else:
