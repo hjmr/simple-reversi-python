@@ -30,11 +30,10 @@ def run_minimax_thread(args):
 
 
 class Minimax_Threaded:
-    def __init__(self, evaluator, my_stone, num_thread=4, use_process=False):
+    def __init__(self, evaluator, my_stone, num_thread=4):
         self.evaluator = evaluator
         self.my_stone = my_stone
         self.num_thread = num_thread
-        self.use_process = use_process
 
     def search_next_move(self, a_board, max_level):
         _pos, _eval, _eval_count = self._minimax(a_board, self.my_stone, 0, max_level)
@@ -45,12 +44,9 @@ class Minimax_Threaded:
         _pos_list = split_list(get_positions_to_put_stone(a_board, a_stone), self.num_thread)
         _args = [[Minimax_Sub(self.evaluator, self.my_stone, max_level), a_board, a_stone, level, _pl]
                  for _pl in _pos_list]
-        if self.use_process:
-            with ProcessPoolExecutor(max_workers=self.num_thread) as executor:
-                _eval_list = executor.map(run_minimax_thread, _args)
-        else:
-            with ThreadPoolExecutor(max_workers=self.num_thread) as executor:
-                _eval_list = executor.map(run_minimax_thread, _args)
+
+        with ProcessPoolExecutor(max_workers=self.num_thread) as executor:
+            _eval_list = executor.map(run_minimax_thread, _args)
 
         _eval_list = [v for v in _eval_list]
         _eval_count = sum(v[2] for v in _eval_list)

@@ -30,13 +30,12 @@ class HumanPlayer(Player):
 
 
 class ComputerPlayer(Player):
-    def __init__(self, my_stone, max_search_level=5, num_thread=1, use_process=False):
+    def __init__(self, my_stone, max_search_level=5, num_thread=1):
         super().__init__(my_stone)
         self.max_search_level = max_search_level
         self.num_thread = num_thread
-        self.use_process = use_process
         if 1 < self.num_thread:
-            self.selector = Minimax_Threaded(MiddleEvaluator(), self.my_stone, self.num_thread, self.use_process)
+            self.selector = Minimax_Threaded(MiddleEvaluator(), self.my_stone, self.num_thread)
         else:
             self.selector = Minimax(MiddleEvaluator(), self.my_stone)
 
