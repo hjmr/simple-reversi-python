@@ -65,7 +65,12 @@ class GUIGame(Game):
     def show_pass(self):
         pass
 
-    def show_stat(self):
+    def show_result(self):
         black_num = self.board.count_stones(stone.BLACK)
         white_num = self.board.count_stones(stone.WHITE)
-        print("Black:{} White:{}".format(black_num, white_num))
+        win_str = "Draw."
+        if black_num < white_num:
+            win_str = "White Win."
+        else:
+            win_str = "Black Win."
+        print("{} (Black:{} White:{})".format(win_str, black_num, white_num))
