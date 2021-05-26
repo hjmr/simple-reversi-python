@@ -1,3 +1,4 @@
+from os import environ
 import sys
 import pygame
 from pygame.locals import *
@@ -39,6 +40,7 @@ class HumanGUIPlayer(Player):
 class GUIGame(Game):
     def __init__(self, players):
         super().__init__(players)
+        environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
         pygame.init()
         pygame.display.set_caption("Reversi")
         self.screen = pygame.display.set_mode(WIN_SIZE)
