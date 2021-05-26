@@ -40,7 +40,7 @@ class ComputerPlayer(Player):
             self.selector = Minimax(MiddleEvaluator(), self.my_stone)
 
     def next_move(self, board):
-        if board.count_blank() <= self.max_search_level + 7:
+        if board.count_blank() < self.max_search_level + 8:
             if 1 < self.num_thread:
                 self.selector = Minimax_Threaded(FinalEvaluator(), self.my_stone, num_thread=self.num_thread)
             else:
