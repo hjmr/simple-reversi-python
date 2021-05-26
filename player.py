@@ -50,10 +50,13 @@ class ComputerPlayer(Player):
         _start_time = time.time()
         _pos, _eval, _eval_num = self.selector.search_next_move(board, self.max_search_level)
         _elapsed_time = time.time() - _start_time
-        _time_per_eval = 1000 * _elapsed_time / _eval_num
-        print("Put: {} Eval: {} (level:{} num:{} time:{:.2f}s tpe:{:.2f}ms)".format(
-            self._pos2str(_pos), _eval, self.max_search_level, _eval_num, _elapsed_time, _time_per_eval))
+        self._show_stat(_elapsed_time, _pos, _eval, _eval_num)
         return _pos
+
+    def _show_stat(self, elapsed_time, pos, evaluation, evaluated_num):
+        _time_per_eval_us = 1000 * 1000 * elapsed_time / evaluated_num
+        print("Put: {} Eval: {} (level:{} num:{} time:{:.2f}s tpe:{:.2f}us)".format(
+            self._pos2str(pos), evaluation, self.max_search_level, evaluated_num, elapsed_time, _time_per_eval_us))
 
     def _pos2str(self, pos):
         int2str_tbl = "-ABCDEFGH-"

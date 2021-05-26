@@ -16,6 +16,8 @@ COL_GREEN = (50, 150, 50)
 COL_BLACK = (0, 0, 0)
 COL_WHITE = (255, 255, 255)
 
+environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+
 
 class HumanGUIPlayer(Player):
     def __init__(self, my_stone):
@@ -40,7 +42,6 @@ class HumanGUIPlayer(Player):
 class GUIGame(Game):
     def __init__(self, players):
         super().__init__(players)
-        environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
         pygame.init()
         pygame.display.set_caption("Reversi")
         self.screen = pygame.display.set_mode(WIN_SIZE)
