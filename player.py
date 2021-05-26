@@ -39,16 +39,16 @@ class ComputerPlayer(Player):
         else:
             self.selector = Minimax(MiddleEvaluator(), self.my_stone)
 
-    def next_move(self, board):
-        if board.count_blank() < self.max_search_level + 8:
+    def next_move(self, a_board):
+        if a_board.count_blank() < self.max_search_level + 8:
             if 1 < self.num_thread:
                 self.selector = Minimax_Threaded(FinalEvaluator(), self.my_stone, num_thread=self.num_thread)
             else:
                 self.selector = Minimax(FinalEvaluator(), self.my_stone)
-            self.max_search_level = board.count_blank()
+            self.max_search_level = a_board.count_blank()
 
         _start_time = time.time()
-        _pos, _eval, _eval_num = self.selector.search_next_move(board, self.max_search_level)
+        _pos, _eval, _eval_num = self.selector.search_next_move(a_board, self.max_search_level)
         _elapsed_time = time.time() - _start_time
         self._show_stat(_elapsed_time, _pos, _eval, _eval_num)
         return _pos
