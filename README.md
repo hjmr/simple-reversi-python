@@ -1,4 +1,4 @@
-* How to enable Cython libraries
+## How to enable Cython libraries
 
 Compile *.pyx files by the following command:
 
