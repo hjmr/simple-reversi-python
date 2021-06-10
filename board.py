@@ -22,10 +22,10 @@ class Board:
         for x in range(1, SIZE+1):
             for y in range(1, SIZE+1):
                 self.set_stone_at(BLANK, (x, y))
-        self.set_stone_at(stone.BLACK, (4, 4))
-        self.set_stone_at(stone.BLACK, (5, 5))
-        self.set_stone_at(stone.WHITE, (4, 5))
-        self.set_stone_at(stone.WHITE, (5, 4))
+        self.set_stone_at(stone.WHITE, (4, 4))
+        self.set_stone_at(stone.WHITE, (5, 5))
+        self.set_stone_at(stone.BLACK, (4, 5))
+        self.set_stone_at(stone.BLACK, (5, 4))
 
     def get_at(self, pos):
         _ret = BORDER
