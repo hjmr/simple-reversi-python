@@ -2,14 +2,14 @@ import stone
 
 
 cdef class Evaluator:
-    cpdef int eval(self, object a_board, int a_stone):
+    cpdef int eval(self, object a_board, int curr_stone, int my_stone):
         pass
 
 
 cdef class MiddleEvaluator(Evaluator):
     """evaluator for the first to middle periods."""
 
-    cpdef int eval(self, object a_board, int my_stone):
+    cpdef int eval(self, object a_board, int curr_stone, int my_stone):
         cdef int _my_putpos = self._count_putpos(a_board, my_stone)
         cdef int _opp_putpos = self._count_putpos(a_board, stone.reverse(my_stone))
         cdef int _eval = _my_putpos - _opp_putpos + self._eval_corners(a_board, my_stone)
@@ -43,7 +43,7 @@ cdef class MiddleEvaluator(Evaluator):
 cdef class FinalEvaluator(Evaluator):
     """evaluator for the last period which evaluate the number of stones"""
 
-    cpdef int eval(self, object a_board, int my_stone):
+    cpdef int eval(self, object a_board, int curr_stone, int my_stone):
         cdef int _my_count = a_board.count_stones(my_stone)
         cdef int _opp_count = a_board.count_stones(stone.reverse(my_stone))
         cdef int _eval = _my_count - _opp_count
