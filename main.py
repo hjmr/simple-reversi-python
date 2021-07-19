@@ -5,6 +5,8 @@ from game import ConsoleGame
 from player import HumanPlayer, ComputerPlayer
 from gui import HumanGUIPlayer, GUIGame
 
+from evaluator import PutPosEvaluator, PutPosCornerEvaluator, AverageEvaluator, StoneNumEvaluator
+
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Simple Reversi")
@@ -19,7 +21,7 @@ def parse_args():
 def run(args):
     com_stone, man_stone = (stone.BLACK, stone.WHITE) if args.computer_first else (stone.WHITE, stone.BLACK)
 
-    com_player = ComputerPlayer(com_stone, args.level, args.thread_num)
+    com_player = ComputerPlayer(com_stone, PutPosCornerEvaluator(), StoneNumEvaluator(), args.level, args.thread_num)
     man_player = HumanGUIPlayer(man_stone) if args.use_gui else HumanPlayer(man_stone)
     players = {com_stone: com_player, man_stone: man_player}
 
