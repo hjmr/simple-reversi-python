@@ -29,8 +29,9 @@ class HumanPlayer(Player):
 
 
 class ComputerPlayer(Player):
-    def __init__(self, my_stone, middleEvaluator, finalEvaluator, max_search_level=5, num_thread=1):
+    def __init__(self, name, my_stone, middleEvaluator, finalEvaluator, max_search_level=5, num_thread=1):
         super().__init__(my_stone)
+        self.name = name
         self.max_search_level = max_search_level
         self.num_thread = num_thread
         self.middleEvaluator = middleEvaluator
@@ -64,4 +65,4 @@ class ComputerPlayer(Player):
         return int2str_tbl[pos[0]] + str(pos[1])
 
     def __str__(self):
-        return "Computer"
+        return "Computer ({})".format(self.name)
