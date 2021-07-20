@@ -6,7 +6,7 @@ class Evaluator:
         pass
 
 class PutPosEvaluator(Evaluator):
-    """evaluator for the first to middle periods."""
+    """evaluate the number of possible positions to put stones."""
 
     def eval(self, a_board, _, my_stone):
         _my_putpos = self._count_putpos(a_board, my_stone)
@@ -24,12 +24,17 @@ class PutPosEvaluator(Evaluator):
 
 
 class PutPosCornerEvaluator(Evaluator):
-    """evaluator for the first to middle periods."""
+    """evaluate the number of possible positions to put stones and the corners."""
+
+    def __init__(self, my_pos_rate = 1, opp_pos_rate = 1, corner_rate = 1):
+        self.my_pos_rate = my_pos_rate
+        self.opp_pos_rate = opp_pos_rate
+        self.corner_rate = corner_rate
 
     def eval(self, a_board, _, my_stone):
         _my_putpos = self._count_putpos(a_board, my_stone)
         _opp_putpos = self._count_putpos(a_board, stone.reverse(my_stone))
-        _eval = _my_putpos - _opp_putpos + self._eval_corners(a_board, my_stone)
+        _eval = self.my_pos_rate * _my_putpos - self.opp_pos_rate * _opp_putpos + self.corner_rate * self._eval_corners(a_board, my_stone)
         return _eval
 
     def _count_putpos(self, a_board, my_stone):
@@ -65,7 +70,7 @@ class AverageEvaluator(Evaluator):
         _oppo_stone = stone.reverse(curr_stone)
         _pos_list = self._get_positions_to_put_stone(a_board, _oppo_stone)
         if 0 < len(_pos_list):
-            _eval = 0
+            _eval = 0.0
             for _p in _pos_list:
                 b = a_board.copy()
                 b.put_stone_at(_oppo_stone, _p)

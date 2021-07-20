@@ -62,6 +62,8 @@ class GUIGame(Game):
                 elif _s == stone.WHITE:
                     pygame.draw.circle(self.screen, COL_WHITE, (_center_x, _center_y), STONE_SIZE)
         pygame.display.flip()
+        _str_stone = {stone.BLACK: "Black", stone.WHITE: "White"}
+        print("Turn: {} ({})".format(_str_stone[self.curr_stone], self.players[self.curr_stone]))
 
     def show_pass(self):
         pass

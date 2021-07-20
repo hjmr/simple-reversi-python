@@ -2,16 +2,16 @@ import stone
 
 
 cdef class Evaluator:
-    cpdef int eval(self, object a_board, int curr_stone, int my_stone):
+    cpdef double eval(self, object a_board, int curr_stone, int my_stone):
         pass
 
 cdef class PutPosEvaluator(Evaluator):
-    """evaluator for the first to middle periods."""
+    """evaluate the number of possible positions to put stones."""
 
-    cpdef int eval(self, object a_board, int curr_stone, int my_stone):
+    cpdef double eval(self, object a_board, int curr_stone, int my_stone):
         cdef int _my_putpos = self._count_putpos(a_board, my_stone)
         cdef int _opp_putpos = self._count_putpos(a_board, stone.reverse(my_stone))
-        cdef int _eval = _my_putpos - _opp_putpos
+        cdef double _eval = _my_putpos - _opp_putpos
         return _eval
 
     cdef int _count_putpos(self, object a_board, int my_stone):
@@ -24,12 +24,21 @@ cdef class PutPosEvaluator(Evaluator):
         return _count
 
 cdef class PutPosCornerEvaluator(Evaluator):
-    """evaluator for the first to middle periods."""
+    """evaluate the number of possible positions to put stones and the corners."""
 
-    cpdef int eval(self, object a_board, int curr_stone, int my_stone):
+    cdef double my_pos_rate
+    cdef double opp_pos_rate
+    cdef double corner_rate
+
+    def __init__(self, my_pos_rate = 1, opp_pos_rate = 1, corner_rate = 1):
+        self.my_pos_rate = my_pos_rate
+        self.opp_pos_rate = opp_pos_rate
+        self.corner_rate = corner_rate
+
+    cpdef double eval(self, object a_board, int curr_stone, int my_stone):
         cdef int _my_putpos = self._count_putpos(a_board, my_stone)
         cdef int _opp_putpos = self._count_putpos(a_board, stone.reverse(my_stone))
-        cdef int _eval = _my_putpos - _opp_putpos + self._eval_corners(a_board, my_stone)
+        cdef double _eval = self.my_pos_rate * _my_putpos - self.opp_pos_rate * _opp_putpos + self.corner_rate * self._eval_corners(a_board, my_stone)
         return _eval
 
     cdef int _count_putpos(self, object a_board, int my_stone):
@@ -65,20 +74,20 @@ cdef class AverageEvaluator(Evaluator):
         super().__init__()
         self.evaluator = PutPosCornerEvaluator()
 
-    cpdef int eval(self, object a_board, int curr_stone, int my_stone):
+    cpdef double eval(self, object a_board, int curr_stone, int my_stone):
         cdef int _oppo_stone = stone.reverse(curr_stone)
         cdef list _pos_list = self._get_positions_to_put_stone(a_board, _oppo_stone)
-        cdef int _eval = 0
+        cdef double _eval = 0.0
         cdef (int, int) _p
 
         if 0 < len(_pos_list):
-            _eval = 0
+            _eval = 0.0
             for _p in _pos_list:
                 b = a_board.copy()
                 b.put_stone_at(_oppo_stone, _p)
                 b.reverse_stones_from(_p)
-                _eval += self.evaluator.eval(a_board, curr_stone, my_stone) * 10
-            _eval /= len(_pos_list)
+                _eval += self.evaluator.eval(a_board, curr_stone, my_stone)
+            _eval = _eval / len(_pos_list)
         else:
             _eval = self.evaluator.eval(a_board, curr_stone, my_stone) * 10
         return _eval
@@ -96,8 +105,8 @@ cdef class AverageEvaluator(Evaluator):
 cdef class StoneNumEvaluator(Evaluator):
     """evaluator for the last period which evaluate the number of stones"""
 
-    cpdef int eval(self, object a_board, int curr_stone, int my_stone):
+    cpdef double eval(self, object a_board, int curr_stone, int my_stone):
         cdef int _my_count = a_board.count_stones(my_stone)
         cdef int _opp_count = a_board.count_stones(stone.reverse(my_stone))
-        cdef int _eval = _my_count - _opp_count
+        cdef double _eval = _my_count - _opp_count
         return _eval
