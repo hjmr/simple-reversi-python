@@ -47,21 +47,22 @@ class GUIGame(Game):
         self.screen = pygame.display.set_mode(WIN_SIZE)
 
     def show_board(self):
-        self.screen.fill(COL_GREEN)
-        for x in range(SIZE):
-            pygame.draw.line(self.screen, COL_BLACK, (x * CELL_W, 0),  (x * CELL_W, WIN_H))
-        for y in range(SIZE):
-            pygame.draw.line(self.screen, COL_BLACK, (0, y * CELL_H), (WIN_W, y * CELL_H))
-        for x in range(SIZE):
+        for event in pygame.event.get():
+            self.screen.fill(COL_GREEN)
+            for x in range(SIZE):
+                pygame.draw.line(self.screen, COL_BLACK, (x * CELL_W, 0),  (x * CELL_W, WIN_H))
             for y in range(SIZE):
-                _s = self.board.get_at((x+1, y+1))
-                _center_x = x * CELL_W + CELL_W / 2
-                _center_y = y * CELL_H + CELL_H / 2
-                if _s == stone.BLACK:
-                    pygame.draw.circle(self.screen, COL_BLACK, (_center_x, _center_y), STONE_SIZE)
-                elif _s == stone.WHITE:
-                    pygame.draw.circle(self.screen, COL_WHITE, (_center_x, _center_y), STONE_SIZE)
-        pygame.display.flip()
+                pygame.draw.line(self.screen, COL_BLACK, (0, y * CELL_H), (WIN_W, y * CELL_H))
+            for x in range(SIZE):
+                for y in range(SIZE):
+                    _s = self.board.get_at((x+1, y+1))
+                    _center_x = x * CELL_W + CELL_W / 2
+                    _center_y = y * CELL_H + CELL_H / 2
+                    if _s == stone.BLACK:
+                        pygame.draw.circle(self.screen, COL_BLACK, (_center_x, _center_y), STONE_SIZE)
+                    elif _s == stone.WHITE:
+                        pygame.draw.circle(self.screen, COL_WHITE, (_center_x, _center_y), STONE_SIZE)
+            pygame.display.flip()
         _str_stone = {stone.BLACK: "Black", stone.WHITE: "White"}
         print("Turn: {} ({})".format(_str_stone[self.curr_stone], self.players[self.curr_stone]))
 

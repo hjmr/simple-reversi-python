@@ -23,6 +23,7 @@ def run(args):
 
     com1_player = ComputerPlayer("PPC-211", com_stone, PutPosCornerEvaluator(2, 1, 1), StoneNumEvaluator(), args.level, args.thread_num)
     # com2_player = ComputerPlayer("PP", man_stone, PutPosEvaluator(), StoneNumEvaluator(), args.level, args.thread_num)
+    # players = {com_stone: com1_player, man_stone: com2_player}
     man_player = HumanGUIPlayer(man_stone) if args.use_gui else HumanPlayer(man_stone)
     players = {com_stone: com1_player, man_stone: man_player}
 
