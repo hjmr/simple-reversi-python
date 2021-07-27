@@ -76,5 +76,5 @@ class MinimaxThreadPlayer(ComputerPlayer):
 
     def next_move(self, a_board):
         if a_board.count_blank() < self.max_search_level + 8:
-            self.selector = Minimax_Threaded(self.final_evaluator, self.my_stone, a_board.count_blank(), num_thread=self.num_thread)
+            self.selector = Minimax_Threaded(self.my_stone, self.final_evaluator, a_board.count_blank(), num_thread=self.num_thread)
         return super().next_move(a_board)
