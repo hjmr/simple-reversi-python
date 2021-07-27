@@ -3,6 +3,7 @@ import time
 from board import Board
 from minimax import Minimax
 from minimax_thread import Minimax_Threaded
+from mcs import MCS
 
 
 class Player:
@@ -78,3 +79,8 @@ class MinimaxThreadPlayer(ComputerPlayer):
         if a_board.count_blank() < self.max_search_level + 8:
             self.selector = Minimax_Threaded(self.my_stone, self.final_evaluator, a_board.count_blank(), num_thread=self.num_thread)
         return super().next_move(a_board)
+
+
+class McsPlayer(ComputerPlayer):
+    def __init__(self, name, my_stone, try_num = 10):
+        super().__init__(name, my_stone, MCS(my_stone, try_num))

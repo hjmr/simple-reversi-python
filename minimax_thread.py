@@ -79,7 +79,7 @@ class _Minimax_Sub:
                 b.put_stone_at(curr_stone, _p)
                 b.reverse_stones_from(_p)
                 if self.max_search_level <= level:
-                    _eval_list[_p] = self._eval(b, curr_stone)
+                    _eval_list[_p] = self._eval(b)
                 else:
                     _eval_list[_p] = self._minimax(b, stone.reverse(curr_stone), level, _alpha, _beta)[1]
                 # alpha-beta branch cut
@@ -96,12 +96,12 @@ class _Minimax_Sub:
                 _eval_pos = min(_eval_list.items(), key=lambda x: x[1])
         else:
             if self.max_search_level <= level:
-                _eval_pos = (None, self._eval(a_board, curr_stone))
+                _eval_pos = (None, self._eval(a_board))
             else:
                 _eval_pos = (None, self._minimax(a_board, stone.reverse(curr_stone), level, alpha, beta)[1])
         return _eval_pos
 
-    def _eval(self, _board, _curr_stone):
+    def _eval(self, _board):
         self.eval_count += 1
-        _eval = self.evaluator.eval(_board, _curr_stone, self.my_stone)
+        _eval = self.evaluator.eval(_board, self.my_stone)
         return _eval

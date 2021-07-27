@@ -30,7 +30,7 @@ class Minimax(ActionSelector):
                 b.put_stone_at(curr_stone, _p)
                 b.reverse_stones_from(_p)
                 if self.max_search_level <= curr_level:
-                    _eval_list[_p] = self._eval(b, curr_stone)
+                    _eval_list[_p] = self._eval(b)
                 else:
                     _eval_list[_p] = self._minimax(b, stone.reverse(curr_stone), curr_level, _alpha, _beta)[1]
 
@@ -48,20 +48,20 @@ class Minimax(ActionSelector):
                 _eval_pos = min(_eval_list.items(), key=lambda x: x[1])
         else:
             if self.max_search_level <= curr_level:
-                _eval_pos = (None, self._eval(a_board, curr_stone))
+                _eval_pos = (None, self._eval(a_board))
             else:
                 _eval_pos = (None, self._minimax(a_board, stone.reverse(curr_stone), curr_level, alpha, beta)[1])
         return _eval_pos
 
-    def _eval(self, a_board, curr_stone):
+    def _eval(self, a_board):
         self.eval_count += 1
-        _eval = self.evaluator.eval(a_board, curr_stone, self.my_stone)
+        _eval = self.evaluator.eval(a_board, self.my_stone)
         return _eval
 
-    def _get_positions_to_put_stone(self, a_board, curr_stone):
+    def _get_positions_to_put_stone(self, a_board, stone):
         _positions = []
         for x in range(1, 9):
             for y in range(1, 9):
-                if a_board.possible_to_put_stone_at(curr_stone, (x, y)):
+                if a_board.possible_to_put_stone_at(stone, (x, y)):
                     _positions.append((x, y))
         return _positions
