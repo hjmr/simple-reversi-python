@@ -29,28 +29,14 @@ class HumanPlayer(Player):
 
 
 class ComputerPlayer(Player):
-    def __init__(self, name, my_stone, middleEvaluator, finalEvaluator, max_search_level=5, num_thread=1):
+    def __init__(self, name, my_stone, action_selector):
         super().__init__(my_stone)
         self.name = name
-        self.max_search_level = max_search_level
-        self.num_thread = num_thread
-        self.middleEvaluator = middleEvaluator
-        self.finalEvaluator = finalEvaluator
-        if 1 < self.num_thread:
-            self.selector = Minimax_Threaded(self.middleEvaluator, self.my_stone, self.num_thread)
-        else:
-            self.selector = Minimax(self.middleEvaluator, self.my_stone)
-
+        self.selector = action_selector
+    
     def next_move(self, a_board):
-        if a_board.count_blank() < self.max_search_level + 8:
-            if 1 < self.num_thread:
-                self.selector = Minimax_Threaded(self.finalEvaluator, self.my_stone, num_thread=self.num_thread)
-            else:
-                self.selector = Minimax(self.finalEvaluator, self.my_stone)
-            self.max_search_level = a_board.count_blank()
-
         _start_time = time.time()
-        _pos, _eval, _eval_num = self.selector.search_next_move(a_board, self.max_search_level)
+        _pos, _eval, _eval_num = self.selector.search_next_move(a_board)
         _elapsed_time = time.time() - _start_time
         self._show_stat(_elapsed_time, _pos, _eval, _eval_num)
         return _pos
@@ -66,3 +52,29 @@ class ComputerPlayer(Player):
 
     def __str__(self):
         return "Computer ({})".format(self.name)
+
+
+class MinimaxPlayer(ComputerPlayer):
+    def __init__(self, name, my_stone, middle_evaluator, final_evaluator, max_search_level=5):
+        super().__init__(name, my_stone, Minimax(my_stone, middle_evaluator, max_search_level))
+        self.final_evaluator = final_evaluator
+        self.max_search_level = max_search_level
+    
+    def next_move(self, a_board):
+        if a_board.count_blank() < self.max_search_level + 8:
+            self.selector = Minimax(self.my_stone, self.final_evaluator, a_board.count_blank())
+        return super().next_move(a_board)
+
+
+
+class MinimaxThreadPlayer(ComputerPlayer):
+    def __init__(self, name, my_stone, middle_evaluator, final_evaluator, max_search_level=5, num_thread=4):
+        super().__init__(name, my_stone, Minimax_Threaded(my_stone, middle_evaluator, max_search_level, num_thread))
+        self.final_evaluator = final_evaluator
+        self.max_search_level = max_search_level
+        self.num_thread = num_thread
+
+    def next_move(self, a_board):
+        if a_board.count_blank() < self.max_search_level + 8:
+            self.selector = Minimax_Threaded(self.final_evaluator, self.my_stone, a_board.count_blank(), num_thread=self.num_thread)
+        return super().next_move(a_board)

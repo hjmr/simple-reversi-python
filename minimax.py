@@ -1,23 +1,25 @@
 import stone
 from board import Board
+from action_selector import ActionSelector
 
 SMALL_NUMBER = -1000
 LARGE_NUMBER = 1000
 
 
-class Minimax:
-    def __init__(self, _evaluator, _my_stone):
-        self.evaluator = _evaluator
-        self.my_stone = _my_stone
+class Minimax(ActionSelector):
+    def __init__(self, my_stone, evaluator, max_search_level = 5):
+        super().__init__(my_stone)
+        self.evaluator = evaluator
+        self.max_search_level = max_search_level
         self.eval_count = 0
 
-    def search_next_move(self, a_board, max_level):
+    def search_next_move(self, a_board):
         self.eval_count = 0
-        _pos, _eval = self._minimax(a_board, self.my_stone, 0, max_level, SMALL_NUMBER, LARGE_NUMBER)
+        _pos, _eval = self._minimax(a_board, self.my_stone, 0, SMALL_NUMBER, LARGE_NUMBER)
         return (_pos, _eval, self.eval_count)
 
-    def _minimax(self, a_board, curr_stone, level, max_level, alpha, beta):
-        level += 1
+    def _minimax(self, a_board, curr_stone, curr_level, alpha, beta):
+        curr_level += 1
         _pos_list = self._get_positions_to_put_stone(a_board, curr_stone)
         if 0 < len(_pos_list):
             _eval_list = {}
@@ -27,10 +29,10 @@ class Minimax:
                 b = a_board.copy()
                 b.put_stone_at(curr_stone, _p)
                 b.reverse_stones_from(_p)
-                if max_level <= level:
+                if self.max_search_level <= curr_level:
                     _eval_list[_p] = self._eval(b, curr_stone)
                 else:
-                    _eval_list[_p] = self._minimax(b, stone.reverse(curr_stone), level, max_level, _alpha, _beta)[1]
+                    _eval_list[_p] = self._minimax(b, stone.reverse(curr_stone), curr_level, _alpha, _beta)[1]
 
                 # alpha-beta branch cut
                 if (curr_stone == self.my_stone and beta < _eval_list[_p]) or \
@@ -45,10 +47,10 @@ class Minimax:
             else:
                 _eval_pos = min(_eval_list.items(), key=lambda x: x[1])
         else:
-            if max_level <= level:
+            if self.max_search_level <= curr_level:
                 _eval_pos = (None, self._eval(a_board, curr_stone))
             else:
-                _eval_pos = (None, self._minimax(a_board, stone.reverse(curr_stone), level, max_level, alpha, beta)[1])
+                _eval_pos = (None, self._minimax(a_board, stone.reverse(curr_stone), curr_level, alpha, beta)[1])
         return _eval_pos
 
     def _eval(self, a_board, curr_stone):
