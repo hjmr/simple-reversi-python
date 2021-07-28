@@ -20,7 +20,7 @@ class MCS(ActionSelector):
     def _mcs(self, a_board):
         _pos_list = self._get_positions_to_put_stone(a_board, self.my_stone)
         _eval_list = {}
-        _stage_rate = 40.0 / a_board.count_blank() # 最後までの手数に応じた比率（手数が多い→読む数を少なく）
+        _stage_rate = 40.0 / a_board.count_blank() # 最後までの手数に応じた比率（手数が長い（＝序盤）→ 読む数を少なく）
         _pos_num_rate = 1.0 / len(_pos_list)       # 打てる場所の数に応じた比率（読む数が一定になるように）
         _try_num = max(10, int(_stage_rate * _pos_num_rate * self.total_try))
         for _p in _pos_list:
