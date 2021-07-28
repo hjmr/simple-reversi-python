@@ -44,7 +44,7 @@ class ComputerPlayer(Player):
 
     def _show_stat(self, elapsed_time, pos, evaluation, evaluated_num):
         _time_per_eval_us = 1000 * 1000 * elapsed_time / evaluated_num
-        print("Put: {} Eval: {} (num:{} time:{:.2f}s tpe:{:.2f}us)".format(
+        print("Put: {} Eval: {:.2f} (num:{} time:{:.2f}s tpe:{:.2f}us)".format(
             self._pos2str(pos), evaluation, evaluated_num, elapsed_time, _time_per_eval_us))
 
     def _pos2str(self, pos):
