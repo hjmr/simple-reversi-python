@@ -67,3 +67,31 @@ class StoneNumEvaluator(Evaluator):
         _opp_count = a_board.count_stones(stone.reverse(my_stone))
         _eval = _my_count - _opp_count
         return _eval
+
+
+class JinyaEvaluator(Evaluator):
+    """evaluator used in Jinya's reversi program."""
+
+    def eval(self, a_board, my_stone):
+        _points = (
+            ( 45, -11,  4, -1, -1,  4, -11,  45), 
+            (-11, -16, -1, -3, -3,  2, -16, -11), 
+            (  4,  -1,  2, -1, -1,  2,  -1,   4), 
+            ( -1,  -3, -1,  0,  0, -1,  -3,  -1), 
+            ( -1,  -3, -1,  0,  0, -1,  -3,  -1), 
+            (  4,  -1,  2, -1, -1,  2,  -1,   4), 
+            (-11, -16, -1, -3, -3,  2, -16, -11), 
+            ( 45, -11,  4, -1, -1,  4, -11,  45)
+        )
+        _opp_stone = stone.reverse(my_stone)
+        _my_point = 0
+        _opp_point = 0
+        for x in range(8):
+            for y in range(8):
+                s = a_board.get_at((x+1,y+1))
+                if s == my_stone:
+                    _my_point += _points[x][y]
+                elif s == _opp_stone:
+                    _opp_point += _points[x][y]
+        _eval = _my_point - _opp_point
+        return _eval
