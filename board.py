@@ -19,8 +19,8 @@ class Board:
                 self.pos_table[x][y] = y * (SIZE + 2) + x
 
         self.board = [BORDER] * (SIZE + 2) * (SIZE + 2)
-        for x in range(1, SIZE+1):
-            for y in range(1, SIZE+1):
+        for x in range(1, SIZE + 1):
+            for y in range(1, SIZE + 1):
                 self.set_stone_at(BLANK, (x, y))
         self.set_stone_at(stone.WHITE, (4, 4))
         self.set_stone_at(stone.WHITE, (5, 5))
@@ -80,7 +80,9 @@ class Board:
     def count_reversible_stones(self, a_stone, pos):
         _reverse_num = 0
         for _dir in directions:
-            _reverse_num += self._count_reversible_stones_in_direction(a_stone, pos, _dir)
+            _reverse_num += self._count_reversible_stones_in_direction(
+                a_stone, pos, _dir
+            )
         return _reverse_num
 
     def reverse_stones_from(self, pos):
@@ -89,7 +91,9 @@ class Board:
             for _dir in directions:
                 _last_pos = self._find_last_pos_in_direction(_stone, pos, _dir)
                 if _last_pos is not None:
-                    self._reverse_stones_in_direction(_stone, _last_pos, (-_dir[0], -_dir[1]))
+                    self._reverse_stones_in_direction(
+                        _stone, _last_pos, (-_dir[0], -_dir[1])
+                    )
 
     def put_stone_at(self, a_stone, pos):
         _success = False
@@ -129,11 +133,14 @@ class Board:
         _cols = [" ", "A", "B", "C", "D", "E", "F", "G", "H"]
         _conv = {BORDER: "#", BLANK: ".", stone.BLACK: "X", stone.WHITE: "O"}
         _sep = " "
-        _s = [[_conv[self.get_at((x, y))] for x in range(1, SIZE + 1)] for y in range(1, SIZE + 1)]
+        _s = [
+            [_conv[self.get_at((x, y))] for x in range(1, SIZE + 1)]
+            for y in range(1, SIZE + 1)
+        ]
 
-        _str = _sep.join(_cols[:SIZE+1]) + "\n"
+        _str = _sep.join(_cols[: SIZE + 1]) + "\n"
         for _ln, _l in enumerate(_s):
-            _str += str(_ln+1) + _sep + _sep.join(_l) + "\n"
+            _str += str(_ln + 1) + _sep + _sep.join(_l) + "\n"
         return _str
 
 
