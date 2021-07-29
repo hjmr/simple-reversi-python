@@ -5,6 +5,7 @@ class Evaluator:
     def eval(self, a_board, my_stone):
         pass
 
+
 class PutPosEvaluator(Evaluator):
     """evaluate the number of possible positions to put stones."""
 
@@ -26,7 +27,7 @@ class PutPosEvaluator(Evaluator):
 class PutPosCornerEvaluator(Evaluator):
     """evaluate the number of possible positions to put stones and the corners."""
 
-    def __init__(self, my_pos_rate = 1, opp_pos_rate = 1, corner_rate = 1):
+    def __init__(self, my_pos_rate=1, opp_pos_rate=1, corner_rate=1):
         self.my_pos_rate = my_pos_rate
         self.opp_pos_rate = opp_pos_rate
         self.corner_rate = corner_rate
@@ -34,7 +35,11 @@ class PutPosCornerEvaluator(Evaluator):
     def eval(self, a_board, my_stone):
         _my_putpos = self._count_putpos(a_board, my_stone)
         _opp_putpos = self._count_putpos(a_board, stone.reverse(my_stone))
-        _eval = self.my_pos_rate * _my_putpos - self.opp_pos_rate * _opp_putpos + self.corner_rate * self._eval_corners(a_board, my_stone)
+        _eval = (
+            self.my_pos_rate * _my_putpos
+            - self.opp_pos_rate * _opp_putpos
+            + self.corner_rate * self._eval_corners(a_board, my_stone)
+        )
         return _eval
 
     def _count_putpos(self, a_board, my_stone):
@@ -74,21 +79,21 @@ class JinyaEvaluator(Evaluator):
 
     def eval(self, a_board, my_stone):
         _points = (
-            ( 45, -11,  4, -1, -1,  4, -11,  45), 
-            (-11, -16, -1, -3, -3, -1, -16, -11), 
-            (  4,  -1,  2, -1, -1,  2,  -1,   4), 
-            ( -1,  -3, -1,  0,  0, -1,  -3,  -1), 
-            ( -1,  -3, -1,  0,  0, -1,  -3,  -1), 
-            (  4,  -1,  2, -1, -1,  2,  -1,   4), 
-            (-11, -16, -1, -3, -3, -1, -16, -11), 
-            ( 45, -11,  4, -1, -1,  4, -11,  45)
+            (45, -11, 4, -1, -1, 4, -11, 45),
+            (-11, -16, -1, -3, -3, -1, -16, -11),
+            (4, -1, 2, -1, -1, 2, -1, 4),
+            (-1, -3, -1, 0, 0, -1, -3, -1),
+            (-1, -3, -1, 0, 0, -1, -3, -1),
+            (4, -1, 2, -1, -1, 2, -1, 4),
+            (-11, -16, -1, -3, -3, -1, -16, -11),
+            (45, -11, 4, -1, -1, 4, -11, 45),
         )
         _opp_stone = stone.reverse(my_stone)
         _my_point = 0
         _opp_point = 0
         for x in range(8):
             for y in range(8):
-                s = a_board.get_at((x+1,y+1))
+                s = a_board.get_at((x + 1, y + 1))
                 if s == my_stone:
                     _my_point += _points[x][y]
                 elif s == _opp_stone:

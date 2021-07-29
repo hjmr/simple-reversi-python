@@ -26,7 +26,9 @@ def _get_positions_to_put_stone(a_board, curr_stone):
 
 
 def _run_minimax_thread(args):
-    _pos, _eval = args[0].do_search(args[1], args[2], args[3], args[4], SMALL_NUMBER, LARGE_NUMBER)
+    _pos, _eval = args[0].do_search(
+        args[1], args[2], args[3], args[4], SMALL_NUMBER, LARGE_NUMBER
+    )
     return (_pos, _eval, args[0].eval_count)
 
 
@@ -43,16 +45,30 @@ class Minimax_Threaded(ActionSelector):
 
     def _minimax(self, a_board, curr_stone, level):
         level += 1
-        _pos_list = _split_list(_get_positions_to_put_stone(a_board, curr_stone), self.num_thread)
-        _args = [[_Minimax_Sub(self.evaluator, self.my_stone, self.max_search_level), a_board, curr_stone, level, _pl]
-                 for _pl in _pos_list]
+        _pos_list = _split_list(
+            _get_positions_to_put_stone(a_board, curr_stone), self.num_thread
+        )
+        _args = [
+            [
+                _Minimax_Sub(self.evaluator, self.my_stone, self.max_search_level),
+                a_board,
+                curr_stone,
+                level,
+                _pl,
+            ]
+            for _pl in _pos_list
+        ]
 
         with ProcessPoolExecutor(max_workers=self.num_thread) as executor:
             _eval_list = executor.map(_run_minimax_thread, _args)
 
         _eval_list = [v for v in _eval_list]
         _eval_count = sum(v[2] for v in _eval_list)
-        _max_list = [(v[0], v[1]) for v in _eval_list if v[1] == max(_eval_list, key=lambda x: x[1])[1]]
+        _max_list = [
+            (v[0], v[1])
+            for v in _eval_list
+            if v[1] == max(_eval_list, key=lambda x: x[1])[1]
+        ]
         _max_p, _max_v = random.choice(_max_list)
         return _max_p, _max_v, _eval_count
 
@@ -81,10 +97,13 @@ class _Minimax_Sub:
                 if self.max_search_level <= level:
                     _eval_list[_p] = self._eval(b)
                 else:
-                    _eval_list[_p] = self._minimax(b, stone.reverse(curr_stone), level, _alpha, _beta)[1]
+                    _eval_list[_p] = self._minimax(
+                        b, stone.reverse(curr_stone), level, _alpha, _beta
+                    )[1]
                 # alpha-beta branch cut
-                if (curr_stone == self.my_stone and beta < _eval_list[_p]) or \
-                   (curr_stone != self.my_stone and _eval_list[_p] < alpha):
+                if (curr_stone == self.my_stone and beta < _eval_list[_p]) or (
+                    curr_stone != self.my_stone and _eval_list[_p] < alpha
+                ):
                     break
                 # update alpha-beta
                 _alpha = _eval_list[_p] if _alpha < _eval_list[_p] else _alpha
@@ -98,7 +117,12 @@ class _Minimax_Sub:
             if self.max_search_level <= level:
                 _eval_pos = (None, self._eval(a_board))
             else:
-                _eval_pos = (None, self._minimax(a_board, stone.reverse(curr_stone), level, alpha, beta)[1])
+                _eval_pos = (
+                    None,
+                    self._minimax(
+                        a_board, stone.reverse(curr_stone), level, alpha, beta
+                    )[1],
+                )
         return _eval_pos
 
     def _eval(self, _board):

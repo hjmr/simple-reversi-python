@@ -16,7 +16,7 @@ COL_GREEN = (50, 150, 50)
 COL_BLACK = (0, 0, 0)
 COL_WHITE = (255, 255, 255)
 
-environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'
+environ["PYGAME_HIDE_SUPPORT_PROMPT"] = "1"
 
 
 class HumanGUIPlayer(Player):
@@ -31,7 +31,10 @@ class HumanGUIPlayer(Player):
                 if event.type == pygame.QUIT:
                     sys.exit()
                 elif event.type == pygame.MOUSEBUTTONDOWN:
-                    _pos = (int(event.pos[0] / CELL_W) + 1, int(event.pos[1] / CELL_H) + 1)
+                    _pos = (
+                        int(event.pos[0] / CELL_W) + 1,
+                        int(event.pos[1] / CELL_H) + 1,
+                    )
                     _done = True
         return _pos
 
@@ -49,25 +52,36 @@ class GUIGame(Game):
     def show_board(self):
         self.screen.fill(COL_GREEN)
         for x in range(SIZE):
-            pygame.draw.line(self.screen, COL_BLACK, (x * CELL_W, 0),  (x * CELL_W, WIN_H))
+            pygame.draw.line(
+                self.screen, COL_BLACK, (x * CELL_W, 0), (x * CELL_W, WIN_H)
+            )
         for y in range(SIZE):
-            pygame.draw.line(self.screen, COL_BLACK, (0, y * CELL_H), (WIN_W, y * CELL_H))
+            pygame.draw.line(
+                self.screen, COL_BLACK, (0, y * CELL_H), (WIN_W, y * CELL_H)
+            )
         for x in range(SIZE):
             for y in range(SIZE):
-                _s = self.board.get_at((x+1, y+1))
+                _s = self.board.get_at((x + 1, y + 1))
                 _center_x = x * CELL_W + CELL_W / 2
                 _center_y = y * CELL_H + CELL_H / 2
                 if _s == stone.BLACK:
-                    pygame.draw.circle(self.screen, COL_BLACK, (_center_x, _center_y), STONE_SIZE)
+                    pygame.draw.circle(
+                        self.screen, COL_BLACK, (_center_x, _center_y), STONE_SIZE
+                    )
                 elif _s == stone.WHITE:
-                    pygame.draw.circle(self.screen, COL_WHITE, (_center_x, _center_y), STONE_SIZE)
+                    pygame.draw.circle(
+                        self.screen, COL_WHITE, (_center_x, _center_y), STONE_SIZE
+                    )
         pygame.display.flip()
         _str_stone = {stone.BLACK: "Black", stone.WHITE: "White"}
-        print("Turn: {} ({})".format(_str_stone[self.curr_stone], self.players[self.curr_stone]))
+        print(
+            "Turn: {} ({})".format(
+                _str_stone[self.curr_stone], self.players[self.curr_stone]
+            )
+        )
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 sys.exit()
-
 
     def show_pass(self):
         print("Pass.")

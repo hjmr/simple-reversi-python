@@ -5,21 +5,42 @@ from game import ConsoleGame
 from player import HumanPlayer, MinimaxPlayer, MinimaxThreadPlayer, McsPlayer
 from gui import HumanGUIPlayer, GUIGame
 
-from evaluator import PutPosEvaluator, PutPosCornerEvaluator, StoneNumEvaluator, JinyaEvaluator
+from evaluator import (
+    PutPosEvaluator,
+    PutPosCornerEvaluator,
+    StoneNumEvaluator,
+    JinyaEvaluator,
+)
 
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Simple Reversi")
-    parser.add_argument("-t", "--thread_num", type=int, default=4, help="The number of threading.")
-    parser.add_argument("-c", "--computer_first", action="store_true",
-                        help="Computer is the first player (white stone).")
-    parser.add_argument("-l", "--level", type=int, default=6, help="Specify the level of computer player.")
+    parser.add_argument(
+        "-t", "--thread_num", type=int, default=4, help="The number of threading."
+    )
+    parser.add_argument(
+        "-c",
+        "--computer_first",
+        action="store_true",
+        help="Computer is the first player (white stone).",
+    )
+    parser.add_argument(
+        "-l",
+        "--level",
+        type=int,
+        default=6,
+        help="Specify the level of computer player.",
+    )
     parser.add_argument("-g", "--use_gui", action="store_true", help="Use GUI.")
     return parser.parse_args()
 
 
 def run(args):
-    com_stone, man_stone = (stone.BLACK, stone.WHITE) if args.computer_first else (stone.WHITE, stone.BLACK)
+    com_stone, man_stone = (
+        (stone.BLACK, stone.WHITE)
+        if args.computer_first
+        else (stone.WHITE, stone.BLACK)
+    )
 
     com1_player = McsPlayer("MCS", com_stone, args.level * 1000)
     # com1_player = MinimaxThreadPlayer("PP", com_stone, PutPosEvaluator(), StoneNumEvaluator(), args.level, args.thread_num)

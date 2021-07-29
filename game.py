@@ -45,7 +45,11 @@ class ConsoleGame(Game):
         _str_stone = {stone.BLACK: "Black", stone.WHITE: "White"}
         print("---------------------------------------")
         print(self.board)
-        print("Turn: {} ({})".format(_str_stone[self.curr_stone], self.players[self.curr_stone]))
+        print(
+            "Turn: {} ({})".format(
+                _str_stone[self.curr_stone], self.players[self.curr_stone]
+            )
+        )
 
     def show_pass(self):
         print("Pass.")

@@ -7,7 +7,7 @@ LARGE_NUMBER = 1000
 
 
 class Minimax(ActionSelector):
-    def __init__(self, my_stone, evaluator, max_search_level = 5):
+    def __init__(self, my_stone, evaluator, max_search_level=5):
         super().__init__(my_stone)
         self.evaluator = evaluator
         self.max_search_level = max_search_level
@@ -15,7 +15,9 @@ class Minimax(ActionSelector):
 
     def search_next_move(self, a_board):
         self.eval_count = 0
-        _pos, _eval = self._minimax(a_board, self.my_stone, 0, SMALL_NUMBER, LARGE_NUMBER)
+        _pos, _eval = self._minimax(
+            a_board, self.my_stone, 0, SMALL_NUMBER, LARGE_NUMBER
+        )
         return (_pos, _eval, self.eval_count)
 
     def _minimax(self, a_board, curr_stone, curr_level, alpha, beta):
@@ -32,11 +34,14 @@ class Minimax(ActionSelector):
                 if self.max_search_level <= curr_level:
                     _eval_list[_p] = self._eval(b)
                 else:
-                    _eval_list[_p] = self._minimax(b, stone.reverse(curr_stone), curr_level, _alpha, _beta)[1]
+                    _eval_list[_p] = self._minimax(
+                        b, stone.reverse(curr_stone), curr_level, _alpha, _beta
+                    )[1]
 
                 # alpha-beta branch cut
-                if (curr_stone == self.my_stone and beta < _eval_list[_p]) or \
-                   (curr_stone != self.my_stone and _eval_list[_p] < alpha):
+                if (curr_stone == self.my_stone and beta < _eval_list[_p]) or (
+                    curr_stone != self.my_stone and _eval_list[_p] < alpha
+                ):
                     break
                 # update alpha-beta
                 _alpha = _eval_list[_p] if _alpha < _eval_list[_p] else _alpha
@@ -50,7 +55,12 @@ class Minimax(ActionSelector):
             if self.max_search_level <= curr_level:
                 _eval_pos = (None, self._eval(a_board))
             else:
-                _eval_pos = (None, self._minimax(a_board, stone.reverse(curr_stone), curr_level, alpha, beta)[1])
+                _eval_pos = (
+                    None,
+                    self._minimax(
+                        a_board, stone.reverse(curr_stone), curr_level, alpha, beta
+                    )[1],
+                )
         return _eval_pos
 
     def _eval(self, a_board):
