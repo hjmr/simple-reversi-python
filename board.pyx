@@ -133,6 +133,14 @@ cdef class Board:
             self.set_stone_at(a_stone, _cur_pos)
             _cur_pos = _move(_cur_pos, dire)
 
+    def __eq__(self, other):
+        if not isinstance(other, Board):
+            return False
+        return self.board == other.board
+
+    def __hash__(self):
+        return hash(self.board)
+
     def __str__(self):
         _cols = [" ", "A", "B", "C", "D", "E", "F", "G", "H"]
         _conv = {BORDER: "#", BLANK: ".", stone.BLACK: "X", stone.WHITE: "O"}
